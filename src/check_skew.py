@@ -28,19 +28,19 @@ import pandas as pd
 
 from config import PROCESSED_DIR, REPO_DIR
 from features import build_features
-from predict import resolve_players
+from engine import resolve_players
 from state import ROLES, FeatureState, GameInput
 from walkforward import prepare
 
 DEFAULT_ARTIFACT = REPO_DIR / "models" / "lol_logistic_sigmoid_v1.joblib"
 
 
-def main() -> int:
+def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--n", type=int, default=300, help="most recent games to replay")
     ap.add_argument("--model", type=Path, default=DEFAULT_ARTIFACT)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     games = pd.read_parquet(PROCESSED_DIR / "games.parquet")
     truth = build_features(games)          # what training saw, per game

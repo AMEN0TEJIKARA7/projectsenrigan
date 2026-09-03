@@ -20,8 +20,6 @@ from sklearn.metrics import brier_score_loss, log_loss, roc_auc_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-import lightgbm as lgb
-
 from config import PROCESSED_DIR
 
 warnings.filterwarnings("ignore")
@@ -98,7 +96,8 @@ def make_logistic(numeric=None) -> Pipeline:
     ])
 
 
-def make_lightgbm() -> lgb.LGBMClassifier:
+def make_lightgbm():
+    import lightgbm as lgb  # optional: only the walk-forward comparison needs it
     return lgb.LGBMClassifier(
         n_estimators=400,
         learning_rate=0.03,

@@ -156,6 +156,17 @@ class ChampionMeta:
         self._decay_total(now)
         self.total_games += n_games
 
+    def fork(self) -> "ChampionMeta":
+        """Shallow copy: reads (which lazily decay) leave the original untouched."""
+        f = ChampionMeta.__new__(ChampionMeta)
+        f.halflife = self.halflife
+        f.wins = defaultdict(float, self.wins)
+        f.games = defaultdict(float, self.games)
+        f.last = dict(self.last)
+        f.total_games = self.total_games
+        f.total_last = self.total_last
+        return f
+
 
 @dataclass
 class GameInput:
@@ -513,6 +524,34 @@ class FeatureState:
         self.last_date = date if self.last_date is None else max(self.last_date, date)
 
     # --- lookups used at predict time ---------------------------------------
+
+    def fork_for_scoring(self) -> "FeatureState":
+        """A cheap copy that `score()` may touch without disturbing this one.
+
+        `score()` only ever inserts or replaces dict entries (defaultdict
+        defaults, champion-meta lazy decay); it never mutates a value in place
+        and never appends to a form deque — only `update()` does that. So a
+        shallow copy of every dict is a complete isolation for scoring, at
+        ~1% of the cost of `copy.deepcopy`. Do NOT call `update()` on a fork:
+        the deques and h2h/series lists are shared with the original.
+        """
+        f = FeatureState.__new__(FeatureState)
+        f.team_elo = defaultdict(_elo_init, self.team_elo)
+        f.team_games = defaultdict(_zero_int, self.team_games)
+        f.team_last_date = dict(self.team_last_date)
+        f.team_form = defaultdict(_form_deque, self.team_form)
+        f.team_last_roster = dict(self.team_last_roster)
+        f.player_elo = defaultdict(_player_elo_init, self.player_elo)
+        f.player_games = defaultdict(_zero_int, self.player_games)
+        f.champ_meta = self.champ_meta.fork()
+        f.role_meta = {r: m.fork() for r, m in self.role_meta.items()}
+        f.matchup_meta = self.matchup_meta.fork()
+        f.league_elo = defaultdict(_league_elo_init, self.league_elo)
+        f.team_home_league = dict(self.team_home_league)
+        f.series = defaultdict(_pair_counter, self.series)
+        f.h2h = defaultdict(_pair_counter, self.h2h)
+        f.last_date = self.last_date
+        return f
 
     def known_teams(self) -> list:
         """Teams the rating pool has actually seen, most recently played first."""

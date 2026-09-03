@@ -11,16 +11,19 @@ import pandas as pd
 
 from config import (
     DRAFT_COLS, INCLUDED_LEAGUES, LEAGUE_REMAP, PROCESSED_DIR, RAW_PATTERN,
-    REPO_DIR, USE_COLS, YEARS,
+    REPO_DIR, USE_COLS, raw_files,
 )
 
 ROLES = ["top", "jng", "mid", "bot", "sup"]
 
 
 def load_raw() -> pd.DataFrame:
+    paths = raw_files()
+    if not paths:
+        raise FileNotFoundError(
+            f"no {RAW_PATTERN.format(year='YYYY')} files in {REPO_DIR}")
     frames = []
-    for year in YEARS:
-        path = REPO_DIR / RAW_PATTERN.format(year=year)
+    for path in paths:
         df = pd.read_csv(path, usecols=USE_COLS, low_memory=False)
         frames.append(df)
         print(f"  {path.name}: {len(df):,} rows")

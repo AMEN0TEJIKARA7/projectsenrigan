@@ -37,7 +37,7 @@ import sklearn
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.frozen import FrozenEstimator
 
-from config import PROCESSED_DIR, RAW_PATTERN, REPO_DIR, YEARS
+from config import PROCESSED_DIR, REPO_DIR, raw_files
 from features import build_features
 from state import ROLES
 from walkforward import (
@@ -94,10 +94,7 @@ def load_player_names(player_last_date: dict) -> dict:
     come first, and `predict.py` breaks the tie with the team.
     """
     frames = []
-    for year in YEARS:
-        path = REPO_DIR / RAW_PATTERN.format(year=year)
-        if not path.exists():
-            continue
+    for path in raw_files():
         frames.append(pd.read_csv(path, usecols=["date", "playername", "playerid"],
                                   low_memory=False).dropna(subset=["playerid", "playername"]))
     if not frames:
@@ -162,7 +159,7 @@ def fit_variant(feats: pd.DataFrame, numeric: list, ref_date, refit_full: bool):
     }
 
 
-def main() -> int:
+def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT,
@@ -171,7 +168,7 @@ def main() -> int:
                     help="refit the base model on 100%% of history after calibrating")
     ap.add_argument("--as-of", default=None,
                     help="recency-weight reference date (default: last game in the data)")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     games_path = PROCESSED_DIR / "games.parquet"
     if not games_path.exists():

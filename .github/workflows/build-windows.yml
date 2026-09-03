@@ -1,0 +1,57 @@
+name: Build Windows app
+
+# Every push to main (and any v* tag) trains the model from the committed CSVs,
+# verifies it with the train/serve check, and packages ProjectSenrigan.exe.
+# The .exe is attached to the workflow run; on a tag it is also published as a
+# GitHub Release.
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-app.txt
+
+      - name: Train the model artifact
+        run: |
+          python src/ingest.py
+          python src/train_final.py
+          python src/check_skew.py --n 300
+
+      - name: Package
+        run: pyinstaller app/senrigan.spec --noconfirm --clean
+
+      - name: Smoke-test the executable
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath dist/ProjectSenrigan.exe -PassThru
+          Start-Sleep -Seconds 25
+          if ($p.HasExited) { throw "ProjectSenrigan.exe exited early with code $($p.ExitCode)" }
+          Stop-Process -Id $p.Id -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ProjectSenrigan-windows
+          path: dist/ProjectSenrigan.exe
+          if-no-files-found: error
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/ProjectSenrigan.exe
+          generate_release_notes: true

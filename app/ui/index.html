@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Senrigan</title>
+<style>
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: normal; font-display: swap;
+    src: url(fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: normal; font-display: swap;
+    src: url(fonts/cormorant-garamond-latin-ext-500-normal.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 600; font-style: normal; font-display: swap;
+    src: url(fonts/cormorant-garamond-latin-600-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 600; font-style: normal; font-display: swap;
+    src: url(fonts/cormorant-garamond-latin-ext-600-normal.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: italic; font-display: swap;
+    src: url(fonts/cormorant-garamond-latin-500-italic.woff2) format("woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-style: normal; font-display: swap;
+    src: url(fonts/ibm-plex-sans-latin-400-normal.woff2) format("woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 500; font-style: normal; font-display: swap;
+    src: url(fonts/ibm-plex-sans-latin-500-normal.woff2) format("woff2"); }
+
+  :root {
+    --bg: #0c0f13; --panel: #12161c; --line: #1f242c; --line-2: #2a3039;
+    --text: #e6e4df; --muted: #6b7380; --muted-2: #9aa1ab; --ghost: #3f4650;
+    --blue: #5c7196; --red: #a35c58; --blue-line: #253147; --red-line: #3a2626;
+    --pop: #151a21; --pop-hi: #1c222b;
+    --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px;
+         -webkit-font-smoothing: antialiased; overflow: hidden; user-select: none; }
+  input { font: inherit; color: inherit; background: none; border: 0; outline: 0; padding: 0; margin: 0; width: 100%; user-select: text; }
+  input::placeholder { color: var(--ghost); }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  ::selection { background: #2a2f38; }
+
+  .app { height: 100%; display: flex; flex-direction: column; padding: 36px 48px 24px; max-width: 1180px; margin: 0 auto; }
+
+  /* wordmark */
+  .mark { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .mark .l1 { display: flex; align-items: center; gap: 14px; }
+  .mark .word { font-family: var(--serif); font-weight: 600; font-size: 26px; letter-spacing: .34em; line-height: 1; }
+  .mark .sub  { font-family: var(--serif); font-weight: 500; font-size: 26px; letter-spacing: .34em; line-height: 1; color: var(--muted-2); padding-left: .34em; }
+  .mark svg { display: block; }
+
+  /* body grid */
+  .grid { display: grid; grid-template-columns: 250px minmax(0, 1fr) 250px; gap: 56px; align-items: start; margin-top: 54px; flex: 1; min-height: 0; }
+  .col { display: flex; flex-direction: column; gap: 10px; position: relative; }
+  .col .head { font-family: var(--serif); font-weight: 600; font-size: 22px; letter-spacing: .28em; padding-bottom: 6px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+  .col.blue .head { color: var(--blue); }
+  .col.red  .head { color: var(--red); text-align: right; }
+
+  /* combobox field */
+  .field { position: relative; }
+  .field .box { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px; background: var(--panel); border: 1px solid var(--line); transition: border-color .12s; }
+  .field .tag { width: 28px; flex: none; font-size: 11px; letter-spacing: .14em; color: var(--muted); }
+  .field.focus .box { border-color: var(--muted); }
+  .col.blue .field.focus .box { border-color: var(--blue); }
+  .col.red  .field.focus .box { border-color: var(--red); }
+  .field.bad .box { border-color: #5a2f2f; }
+  .field.bad input { color: #c98a86; }
+  .pop { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--pop); border: 1px solid var(--line-2); z-index: 20; box-shadow: 0 14px 30px rgba(0,0,0,.45); display: none; }
+  .pop.open { display: block; }
+  .pop .opt { display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 14px; font-size: 14px; color: #a9b0ba; cursor: pointer; }
+  .pop .opt.hi { background: var(--pop-hi); color: #fff; }
+  .pop .opt .key { font-size: 11px; letter-spacing: .1em; color: var(--muted); visibility: hidden; }
+  .pop .opt.hi .key { visibility: visible; }
+  .pop .none { height: 40px; display: flex; align-items: center; padding: 0 14px; font-size: 13px; color: var(--muted); }
+
+  /* roster line + editor */
+  .roster { margin-top: 6px; font-size: 12px; color: var(--muted); line-height: 1.5; cursor: pointer; min-height: 18px; }
+  .roster:hover { color: var(--muted-2); }
+  .col.red .roster { text-align: right; }
+  .roster .names { color: var(--muted-2); }
+  .players { display: none; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .players.open { display: flex; }
+  .players .box { height: 36px; }
+  .players .tag { font-size: 10px; }
+  .players input { font-size: 14px; }
+
+  /* centre */
+  .centre { display: flex; flex-direction: column; align-items: center; padding-top: 26px; min-width: 0; }
+  .teams { display: flex; align-items: baseline; justify-content: center; gap: 22px; width: 100%; }
+  .team { position: relative; flex: 1 1 0; min-width: 0; max-width: 260px; }
+  .team input { font-family: var(--serif); font-weight: 600; font-size: 44px; line-height: 1; font-variant-numeric: lining-nums; padding-bottom: 6px; border-bottom: 1px solid var(--line); text-align: center; transition: border-color .12s; }
+  .team.blue input { color: var(--blue); }
+  .team.red  input { color: var(--red); }
+  .team.blue.ok input { border-color: var(--blue-line); }
+  .team.red.ok  input { border-color: var(--red-line); }
+  .team.focus input { border-color: var(--muted); }
+  .team.bad input { border-color: #5a2f2f; color: #c98a86; }
+  .team input::placeholder { color: var(--ghost); font-weight: 500; }
+  .team .pop .opt { font-size: 15px; }
+  .vs { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 22px; color: var(--muted); line-height: 1; flex: none; }
+
+  .cap { font-size: 10px; letter-spacing: .3em; color: var(--muted); margin-top: 62px; }
+  .nums { display: flex; align-items: baseline; justify-content: center; gap: 26px; margin-top: 10px; }
+  .num { font-family: var(--serif); font-weight: 500; font-size: 132px; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; transition: color .2s; }
+  .num.blue { color: var(--blue); } .num.red { color: var(--red); }
+  .nums.empty .num { color: var(--ghost); }
+  .dash { width: 34px; height: 1px; background: #3a414c; }
+  .bar { display: flex; width: 100%; height: 10px; gap: 3px; margin-top: 32px; }
+  .bar .b { width: 50%; background: var(--blue); transition: width .35s cubic-bezier(.2,.7,.2,1), background .2s; }
+  .bar .r { flex: 1; background: var(--red); transition: background .2s; }
+  .bar.empty .b, .bar.empty .r { background: #1a1f26; }
+  .detail { margin-top: 16px; font-size: 12px; letter-spacing: .04em; color: var(--muted); min-height: 18px; text-align: center; }
+  .detail b { font-weight: 500; color: var(--muted-2); }
+  .notes { margin-top: 10px; font-size: 12px; color: #8a7a55; line-height: 1.5; text-align: center; max-width: 520px; }
+
+  /* footer */
+  .foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 18px; font-size: 11px; letter-spacing: .08em; color: var(--muted); }
+  .foot .left, .foot .right { display: flex; align-items: center; gap: 18px; }
+  .foot button { font-size: 11px; letter-spacing: .08em; color: var(--muted-2); border-bottom: 1px solid transparent; padding-bottom: 1px; }
+  .foot button:hover { color: var(--text); border-bottom-color: var(--line-2); }
+  .foot button:disabled { color: var(--ghost); cursor: default; border-bottom-color: transparent; }
+  .foot .league { position: relative; width: 92px; }
+  .foot .league input { font-size: 11px; letter-spacing: .08em; color: var(--muted-2); text-transform: uppercase; text-align: right; border-bottom: 1px solid transparent; }
+  .foot .league.focus input { border-bottom-color: var(--line-2); color: var(--text); }
+  .foot .league .pop { top: auto; bottom: calc(100% + 6px); left: auto; right: 0; width: 200px; }
+  .foot .league .pop .opt { height: 34px; font-size: 12px; }
+  .toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .toggle .sw { width: 26px; height: 12px; border: 1px solid var(--line-2); position: relative; transition: border-color .15s; }
+  .toggle .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 6px; height: 6px; background: var(--ghost); transition: left .15s, background .15s; }
+  .toggle.on .sw { border-color: var(--muted-2); }
+  .toggle.on .sw::after { left: 16px; background: var(--text); }
+  .progress { color: var(--muted-2); }
+  .progress.err { color: #c98a86; }
+
+  /* update log overlay (only while running) */
+  .log { position: fixed; left: 48px; bottom: 54px; width: 460px; max-height: 220px; overflow: hidden; background: var(--pop); border: 1px solid var(--line-2); padding: 12px 14px; font-size: 11px; color: var(--muted-2); line-height: 1.55; display: none; z-index: 30; white-space: pre-wrap; }
+  .log.open { display: block; }
+
+  @media (max-width: 1060px) { .grid { grid-template-columns: 220px minmax(0,1fr) 220px; gap: 36px; } .num { font-size: 108px; } .team input { font-size: 38px; } }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="mark">
+    <div class="l1">
+      <div class="word">PROJECT</div>
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#e6e4df" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M2 15 C7 7.5 23 7.5 28 15 C23 22.5 7 22.5 2 15 Z"></path>
+        <circle cx="15" cy="15" r="6.2"></circle>
+        <circle cx="15" cy="15" r="2.6" fill="#e6e4df" stroke="none"></circle>
+      </svg>
+    </div>
+    <div class="sub">SENRIGAN</div>
+  </div>
+
+  <div class="grid">
+    <!-- BLUE -->
+    <div class="col blue" id="col-blue">
+      <div class="head">BLUE</div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="jng"><div class="box"><div class="tag">JNG</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="mid"><div class="box"><div class="tag">MID</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="bot"><div class="box"><div class="tag">BOT</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="sup"><div class="box"><div class="tag">SUP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="roster" id="roster-blue" title="click to change players"></div>
+      <div class="players" id="players-blue">
+        <div class="field" data-kind="player" data-side="blue" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+        <div class="field" data-kind="player" data-side="blue" data-role="jng"><div class="box"><div class="tag">JNG</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+        <div class="field" data-kind="player" data-side="blue" data-role="mid"><div class="box"><div class="tag">MID</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+        <div class="field" data-kind="player" data-side="blue" data-role="bot"><div class="box"><div class="tag">BOT</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+        <div class="field" data-kind="player" data-side="blue" data-role="sup"><div class="box"><div class="tag">SUP</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      </div>
+    </div>
+
+    <!-- CENTRE -->
+    <div class="centre">
+      <div class="teams">
+        <div class="team blue" id="team-blue" data-kind="team" data-side="blue"><input placeholder="blue team" spellcheck="false" autocomplete="off"><div class="pop"></div></div>
+        <div class="vs">vs</div>
+        <div class="team red" id="team-red" data-kind="team" data-side="red"><input placeholder="red team" spellcheck="false" autocomplete="off"><div class="pop"></div></div>
+      </div>
+      <div class="cap">WIN PROBABILITY</div>
+      <div class="nums empty" id="nums">
+        <div class="num blue" id="num-blue">—</div>
+        <div class="dash"></div>
+        <div class="num red" id="num-red">—</div>
+      </div>
+      <div class="bar empty" id="bar"><div class="b" id="bar-b"></div><div class="r"></div></div>
+      <div class="detail" id="detail"></div>
+      <div class="notes" id="notes"></div>
+    </div>
+
+    <!-- RED -->
+    <div class="col red" id="col-red">
+      <div class="head">RED</div>
+      <div class="field" data-kind="champion" data-side="red" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="jng"><div class="box"><div class="tag">JNG</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="mid"><div class="box"><div class="tag">MID</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="bot"><div class="box"><div class="tag">BOT</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="sup"><div class="box"><div class="tag">SUP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="roster" id="roster-red" title="click to change players"></div>
+      <div class="players" id="players-red">
+        <div class="field" data-kind="player" data-side="red" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+        <div class="field" data-kind="player" data-side="red" data-role="jng"><div class="box"><div class="tag">JNG</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+        <div class="field" data-kind="player" data-side="red" data-role="mid"><div class="box"><div class="tag">MID</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+        <div class="field" data-kind="player" data-side="red" data-role="bot"><div class="box"><div class="tag">BOT</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+        <div class="field" data-kind="player" data-side="red" data-role="sup"><div class="box"><div class="tag">SUP</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="left">
+      <span id="through">Ratings through —</span>
+      <button id="btn-update" title="Download the latest data from the repository and retrain">Update</button>
+      <button id="btn-import" title="Retrain from Oracle's Elixir CSV files on this computer">Import CSV…</button>
+      <span class="progress" id="progress"></span>
+    </div>
+    <div class="right">
+      <div class="toggle" id="playoffs"><span>Playoffs</span><div class="sw"></div></div>
+      <span id="model">— model</span>
+      <div class="league field" data-kind="league" id="league"><input placeholder="league" spellcheck="false" autocomplete="off"><div class="pop"></div></div>
+    </div>
+  </div>
+</div>
+<div class="log" id="log"></div>
+
+<script>
+(() => {
+  // ---- bridge: native pywebview API, or the --dev HTTP shim ----------------
+  const api = new Proxy({}, { get: (_, name) => (...args) =>
+    (window.pywebview && window.pywebview.api)
+      ? window.pywebview.api[name](...args)
+      : fetch('/api/' + name, { method: 'POST', body: JSON.stringify(args) }).then(r => r.json()) });
+
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+  const norm = s => (s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+  const ROLES = ['top', 'jng', 'mid', 'bot', 'sup'];
+  const state = {
+    team: { blue: null, red: null },
+    champ: { blue: {}, red: {} },
+    player: { blue: {}, red: {} },
+    rosterDefault: { blue: [], red: [] },
+    rosterEdited: { blue: false, red: false },
+    leagueManual: false, playoffs: false,
+    meta: null, seq: 0,
+  };
+
+  // ---- combobox ------------------------------------------------------------
+  function combo(root, { kind, onChange, teamFor }) {
+    const input = $('input', root), pop = $('.pop', root);
+    let items = [], hi = 0, resolved = null, openTimer = null, lastQ = null;
+
+    const render = () => {
+      pop.innerHTML = items.length
+        ? items.map((n, i) => `<div class="opt${i === hi ? ' hi' : ''}" data-i="${i}"><span>${esc(n)}</span><span class="key">ENTER</span></div>`).join('')
+        : `<div class="none">no match</div>`;
+      pop.classList.add('open');
+    };
+    const close = () => { pop.classList.remove('open'); pop.innerHTML = ''; };
+    const setResolved = (name) => {
+      const changed = name !== resolved;
+      resolved = name;
+      root.classList.toggle('ok', !!name);
+      root.classList.toggle('bad', !name && !!input.value.trim());
+      if (changed) onChange(name);
+    };
+    let token = 0;
+    const fetchItems = async (q) => {
+      const my = ++token;
+      const list = await api.search(kind, q, teamFor ? teamFor() : null);
+      if (my !== token) return null;                 // a newer query superseded this one
+      items = list; lastQ = q; hi = 0;
+      return list;
+    };
+    const search = debounce(async () => {
+      const q = input.value;
+      if (q !== lastQ) { if ((await fetchItems(q)) === null) return; }
+      if (document.activeElement === input) render();   // never pop open a field that lost focus
+    }, 50);
+    const pick = (name) => { input.value = name; close(); setResolved(name); };
+    const commit = async () => {
+      const raw = input.value, q = norm(raw);
+      if (!q) { setResolved(null); return; }
+      if (resolved && norm(resolved) === q) { input.value = resolved; setResolved(resolved); return; }
+      const list = (raw === lastQ) ? items : await fetchItems(raw);
+      if (list === null || norm(input.value) !== q) return;   // input changed meanwhile
+      const exact = list.find(n => norm(n) === q);
+      if (exact) { input.value = exact; setResolved(exact); }
+      else if (list.length && norm(list[0]).startsWith(q) && q.length >= 2 && document.activeElement !== input) {
+        // typed a clear prefix and moved on: accept the top suggestion
+        input.value = list[0]; setResolved(list[0]);
+      } else setResolved(null);
+    };
+
+    input.addEventListener('focus', () => { root.classList.add('focus'); openTimer = setTimeout(search, 120); });
+    input.addEventListener('input', () => { root.classList.remove('bad'); if (resolved && norm(input.value) !== norm(resolved)) setResolved(null); search(); });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') { hi = Math.min(hi + 1, items.length - 1); render(); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { hi = Math.max(hi - 1, 0); render(); e.preventDefault(); }
+      else if (e.key === 'Enter') {
+        // Only accept a highlighted item if the list belongs to what is typed now;
+        // a list fetched for an earlier prefix must not be picked from.
+        if (pop.classList.contains('open') && items[hi] && input.value === lastQ) pick(items[hi]);
+        else { close(); commit(); }
+        e.preventDefault();
+      }
+      else if (e.key === 'Escape') { close(); input.blur(); }
+      else if (e.key === 'Tab') { if (pop.classList.contains('open') && items[hi] && input.value.trim() && input.value === lastQ) pick(items[hi]); }
+    });
+    input.addEventListener('blur', () => { clearTimeout(openTimer); root.classList.remove('focus'); setTimeout(() => { close(); commit(); }, 120); });
+    pop.addEventListener('mousedown', (e) => { const o = e.target.closest('.opt'); if (o) { e.preventDefault(); pick(items[+o.dataset.i]); } });
+
+    return { set: (name) => { input.value = name || ''; items = []; lastQ = null; setResolved(name || null); },
+             get: () => resolved, clear: () => { input.value = ''; items = []; lastQ = null; setResolved(null); } };
+  }
+  const esc = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  // ---- wire up fields -------------------------------------------------------
+  const combos = { team: {}, champ: { blue: {}, red: {} }, player: { blue: {}, red: {} } };
+
+  for (const side of ['blue', 'red']) {
+    combos.team[side] = combo($('#team-' + side), { kind: 'team', onChange: (n) => onTeam(side, n) });
+    for (const f of $$(`#col-${side} .field[data-kind="champion"]`))
+      combos.champ[side][f.dataset.role] = combo(f, { kind: 'champion', onChange: (n) => { state.champ[side][f.dataset.role] = n; schedule(); } });
+    for (const f of $$(`#players-${side} .field`))
+      combos.player[side][f.dataset.role] = combo(f, { kind: 'player', teamFor: () => state.team[side],
+        onChange: (n) => { state.player[side][f.dataset.role] = n; state.rosterEdited[side] = true; renderRoster(side); schedule(); } });
+    $('#roster-' + side).addEventListener('click', () => $('#players-' + side).classList.toggle('open'));
+  }
+  combos.league = combo($('#league'), { kind: 'league', onChange: () => schedule() });
+  $('#league input').addEventListener('input', () => { state.leagueManual = true; });
+  $('#playoffs').addEventListener('click', () => { state.playoffs = !state.playoffs; $('#playoffs').classList.toggle('on', state.playoffs); schedule(); });
+
+  async function onTeam(side, name) {
+    state.team[side] = name;
+    state.rosterEdited[side] = false;
+    state.player[side] = {};
+    if (name) {
+      const info = await api.team_info(name);
+      state.rosterDefault[side] = info.roster || [];
+      ROLES.forEach((r, i) => combos.player[side][r].set(info.roster && info.roster[i] ? info.roster[i] : ''));
+      state.rosterEdited[side] = false;              // .set() fired onChange; reset
+      state.player[side] = {};
+      // The game's league defaults to the blue team's home league (red's if blue is unset).
+      const home = side === 'blue' ? info.home_league : (!state.team.blue && info.home_league);
+      if (home && !state.leagueManual) combos.league.set(home);
+    } else {
+      state.rosterDefault[side] = [];
+      ROLES.forEach(r => combos.player[side][r].clear());
+      state.rosterEdited[side] = false; state.player[side] = {};
+    }
+    renderRoster(side);
+    schedule();
+  }
+
+  function renderRoster(side) {
+    const el = $('#roster-' + side);
+    const team = state.team[side];
+    if (!team) { el.innerHTML = ''; return; }
+    const names = ROLES.map(r => combos.player[side][r].get() || '—');
+    const label = state.rosterEdited[side] ? 'players' : 'last game';
+    el.innerHTML = `<span>${label} · </span><span class="names">${names.map(esc).join(' · ')}</span>`;
+  }
+
+  // ---- prediction -----------------------------------------------------------
+  const schedule = debounce(predict, 80);
+  const five = (obj) => ROLES.every(r => obj[r]) ? ROLES.map(r => obj[r]) : null;
+
+  async function predict() {
+    const { blue, red } = state.team;
+    if (!blue || !red || blue === red) { renderEmpty(blue && red && blue === red ? 'pick two different teams' : ''); return; }
+    const rosterOf = (side) => state.rosterEdited[side] ? five(Object.fromEntries(ROLES.map(r => [r, combos.player[side][r].get()]))) : null;
+    const payload = {
+      blue, red,
+      blue_champs: five(state.champ.blue), red_champs: five(state.champ.red),
+      blue_roster: rosterOf('blue'), red_roster: rosterOf('red'),
+      league: combos.league.get() || null, playoffs: state.playoffs,
+    };
+    const seq = ++state.seq;
+    const res = await api.predict(payload);
+    if (seq !== state.seq) return;                     // a newer request is in flight
+    if (res.error) { renderEmpty(res.error); return; }
+    render(res);
+  }
+
+  let shown = { b: null };
+  function render(res) {
+    const pb = Math.round(res.p_blue_win * 100), pr = 100 - pb;
+    $('#nums').classList.remove('empty'); $('#bar').classList.remove('empty');
+    countTo($('#num-blue'), pb); countTo($('#num-red'), pr);
+    $('#bar-b').style.width = (res.p_blue_win * 100).toFixed(1) + '%';
+    $('#detail').innerHTML =
+      `fair odds <b>${res.fair_odds_blue.toFixed(2)}</b> · <b>${res.fair_odds_red.toFixed(2)}</b>` +
+      `&nbsp;&nbsp;&nbsp;Elo <b>${Math.round(res.blue_elo)}</b> – <b>${Math.round(res.red_elo)}</b>` +
+      `&nbsp;&nbsp;&nbsp;h2h <b>${res.h2h_blue_wins}</b>–<b>${res.h2h_red_wins}</b>` +
+      (res.blue_form != null && res.red_form != null ? `&nbsp;&nbsp;&nbsp;form <b>${Math.round(res.blue_form * 100)}%</b> / <b>${Math.round(res.red_form * 100)}%</b>` : '');
+    const notes = (res.warnings || []).filter(w => !w.includes('roster assumed') && !w.includes('champion picks ignored'));
+    $('#notes').textContent = notes.join('  ·  ');
+    $('#model').textContent = (res.variant === 'draft' ? 'Draft' : 'Pre-game') + ' model';
+    if (!combos.league.get() && res.league) combos.league.set(res.league);
+  }
+  function renderEmpty(msg) {
+    $('#nums').classList.add('empty'); $('#bar').classList.add('empty');
+    $('#num-blue').textContent = '—'; $('#num-red').textContent = '—'; shown.b = null;
+    $('#bar-b').style.width = '50%';
+    $('#detail').textContent = ''; $('#notes').textContent = msg || '';
+    $('#model').textContent = (five(state.champ.blue) && five(state.champ.red) ? 'Draft' : 'Pre-game') + ' model';
+  }
+  function countTo(el, target) {
+    const from = parseInt(el.textContent, 10); if (isNaN(from)) { el.textContent = target; return; }
+    if (from === target) return;
+    const t0 = performance.now(), dur = 320;
+    const step = (t) => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(from + (target - from) * e); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+
+  // ---- updating ratings -------------------------------------------------------
+  let polling = null;
+  const setBusy = (b) => { $('#btn-update').disabled = b; $('#btn-import').disabled = b; };
+  function watch() {
+    clearInterval(polling); setBusy(true); $('#log').classList.add('open');
+    polling = setInterval(async () => {
+      const st = await api.update_status();
+      $('#log').textContent = st.log.join('\n'); $('#log').scrollTop = 1e6;
+      $('#progress').textContent = st.running ? st.stage + '…' : (st.error ? 'update failed' : (st.stage === 'done' ? 'updated' : ''));
+      $('#progress').classList.toggle('err', !!st.error);
+      if (!st.running) {
+        clearInterval(polling); setBusy(false);
+        if (st.meta) { state.meta = st.meta; $('#through').textContent = 'Ratings through ' + fmtDate(st.meta.trained_through); schedule(); }
+        setTimeout(() => { if (!st.error) $('#log').classList.remove('open'); }, st.error ? 12000 : 2500);
+      }
+    }, 700);
+  }
+  $('#btn-update').addEventListener('click', async () => { await api.start_update('github'); watch(); });
+  $('#btn-import').addEventListener('click', async () => { const st = await api.import_csv(); if (st.error) { $('#progress').textContent = st.error; $('#progress').classList.add('err'); return; } if (st.running) watch(); });
+  document.addEventListener('click', (e) => { if (!e.target.closest('.log') && !e.target.closest('.foot') && !$('#btn-update').disabled) $('#log').classList.remove('open'); });
+
+  const fmtDate = (iso) => { const d = new Date(iso + 'T00:00:00'); return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); };
+
+  // ---- boot -----------------------------------------------------------------
+  let booted = false;
+  async function boot() {
+    if (booted) return; booted = true;
+    state.meta = await api.meta();
+    $('#through').textContent = 'Ratings through ' + fmtDate(state.meta.trained_through);
+    $('#team-blue input').focus();
+  }
+  window.addEventListener('pywebviewready', boot);
+  setTimeout(() => { if (!booted) boot(); }, 400);
+})();
+</script>
+</body>
+</html>

@@ -1,13 +1,27 @@
 """Shared configuration: league scope, column classification, paths."""
 
+import os
 from pathlib import Path
 
-REPO_DIR = Path(__file__).resolve().parent.parent
+# Where the raw CSVs, processed parquet and model artifact live. Defaults to
+# the repository; the desktop app points it at a per-user data folder via
+# SENRIGAN_HOME so retraining never writes into the installed program.
+REPO_DIR = Path(os.environ.get("SENRIGAN_HOME") or Path(__file__).resolve().parent.parent)
 PROCESSED_DIR = REPO_DIR / "data" / "processed"
 
 YEARS = [2022, 2023, 2024, 2025, 2026]
 
 RAW_PATTERN = "{year}_LoL_esports_match_data_from_OraclesElixir.csv"
+
+
+def raw_files() -> list:
+    """Yearly OE CSVs actually present, oldest first.
+
+    Driven by what is on disk rather than YEARS so a data folder that gains a
+    new season (or lacks an old one) still ingests; YEARS documents the
+    expected set.
+    """
+    return sorted(REPO_DIR.glob(RAW_PATTERN.format(year="[0-9][0-9][0-9][0-9]")))
 
 # --- League scope -----------------------------------------------------------
 # Tier 1 regional leagues, kept under their own label.
