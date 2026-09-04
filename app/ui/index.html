@@ -47,32 +47,49 @@
       #0b0e12; }
   body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .055; mix-blend-mode: screen;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-  .app { height: 100%; display: flex; flex-direction: column; padding: 40px 48px 24px; max-width: 1180px; margin: 0 auto; position: relative; z-index: 1; }
+  .app { height: 100%; display: flex; flex-direction: column; padding: 30px 40px 18px; max-width: 1140px; margin: 0 auto; position: relative; z-index: 1; }
 
   /* wordmark */
   .mark { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   .mark { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
-  .grid { animation: rise .7s .12s cubic-bezier(.2,.7,.2,1) both; }
+  .stage { animation: rise .7s .12s cubic-bezier(.2,.7,.2,1) both; }
   .foot { animation: rise .7s .24s cubic-bezier(.2,.7,.2,1) both; }
-  .mark .l1 { display: flex; align-items: center; gap: 28px; }
-  .mark .word { font-family: var(--serif); font-weight: 600; font-size: 66px; letter-spacing: .3em; line-height: 1; }
-  .mark .sub  { font-family: var(--serif); font-weight: 500; font-size: 66px; letter-spacing: .3em; line-height: 1; color: var(--muted-2); padding-left: .3em; }
+  .mark { gap: 8px; }
+  .mark .l1 { display: flex; align-items: center; gap: 24px; }
+  .mark .word { font-family: var(--serif); font-weight: 600; font-size: 56px; letter-spacing: .3em; line-height: 1; }
+  .mark .sub  { font-family: var(--serif); font-weight: 500; font-size: 56px; letter-spacing: .3em; line-height: 1; color: var(--muted-2); padding-left: .3em; }
+  .mark .glyph { width: 64px; height: 64px; }
   .mark svg { display: block; }
 
   /* body grid */
-  .grid { display: grid; grid-template-columns: 250px minmax(0, 1fr) 250px; gap: 0; align-items: start; align-content: center; margin-top: 28px; flex: 1; min-height: 0; }
-  .col { display: flex; flex-direction: column; gap: 6px; position: relative; }
+  /* the stage: one ruled frame around everything you act on, so the atmosphere outside it stays outside */
+  .stage { position: relative; margin: 26px auto 0; width: 100%; max-width: 1060px; border: 1px solid var(--line-2); padding: 26px 34px 22px; background: rgba(12,15,19,.38); backdrop-filter: blur(2px); flex: 0 1 auto; }
+  .stage::before, .stage::after { content: ""; position: absolute; width: 10px; height: 10px; border-color: var(--muted); border-style: solid; }
+  .stage::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+  .stage::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+  .stage .tick { position: absolute; width: 10px; height: 10px; border-color: var(--muted); border-style: solid; }
+  .stage .tick.tr { top: -1px; right: -1px; border-width: 1px 1px 0 0; }
+  .stage .tick.bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
+  .grid { display: grid; grid-template-columns: 236px minmax(0, 1fr) 236px; gap: 0; align-items: start; }
+  .spacer { flex: 1 1 0; min-height: 10px; }
+  .col { display: flex; flex-direction: column; gap: 4px; position: relative; }
   .col .head { font-family: var(--serif); font-weight: 600; font-size: 22px; letter-spacing: .28em; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); margin-bottom: 6px; }
   .col.blue .head { color: var(--blue); }
   .col.red  .head { color: var(--red); text-align: right; }
 
   /* combobox field */
   .field { position: relative; }
-  .field .box { display: flex; align-items: baseline; gap: 14px; height: 46px; padding: 0 2px; background: none; border: 0; border-bottom: 1px solid var(--line); transition: border-color .15s; }
+  .field .box { display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 2px; background: none; border: 0; border-bottom: 1px solid var(--line); transition: border-color .15s; }
   .field input { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1; font-variant-numeric: lining-nums; }
   .field input::placeholder { font-style: italic; font-weight: 500; color: var(--ghost); }
-  .field .tag { width: 30px; flex: none; font-size: 10px; letter-spacing: .18em; color: var(--muted); transform: translateY(-3px); }
+  .field .tag { width: 30px; flex: none; font-size: 10px; letter-spacing: .18em; color: var(--muted); }
+  .field .ic { width: 30px; height: 30px; flex: none; border: 1px solid var(--line-2); background: #0f1319; overflow: hidden; }
+  .field .ic img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.85) brightness(.92); transform: scale(1.12); }
+  .field .ic:empty { border-style: dashed; border-color: var(--line); }
+  .pop .opt .ic { width: 24px; height: 24px; flex: none; border: 1px solid var(--line-2); background: #0f1319; overflow: hidden; margin-right: 10px; }
+  .pop .opt .ic img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.12); }
+  .pop .opt .lbl { display: flex; align-items: center; }
   .field.focus .box { border-bottom-color: var(--muted-2); }
   .col.blue .field.focus .box { border-bottom-color: var(--blue); }
   .col.red  .field.focus .box { border-bottom-color: var(--red); }
@@ -98,10 +115,10 @@
   .players input { font-size: 17px; }
 
   /* centre */
-  .centre { display: flex; flex-direction: column; align-items: center; padding: 26px 44px 22px; margin: 0 40px; min-width: 0; border-left: 1px solid var(--line); border-right: 1px solid var(--line); align-self: stretch; }
+  .centre { display: flex; flex-direction: column; align-items: center; padding: 14px 30px 6px; margin: 0 30px; min-width: 0; border-left: 1px solid var(--line); border-right: 1px solid var(--line); align-self: stretch; }
   .teams { display: flex; align-items: baseline; justify-content: center; gap: 22px; width: 100%; }
-  .team { position: relative; flex: 1 1 0; min-width: 0; max-width: 260px; }
-  .team input { font-family: var(--serif); font-weight: 600; font-size: 44px; line-height: 1; font-variant-numeric: lining-nums; padding-bottom: 6px; border-bottom: 1px solid var(--line); text-align: center; transition: border-color .12s; }
+  .team { position: relative; flex: 1 1 0; min-width: 0; max-width: 300px; }
+  .team input { font-family: var(--serif); font-weight: 600; font-size: 44px; line-height: 1; font-variant-numeric: lining-nums; height: 52px; padding-bottom: 6px; border-bottom: 1px solid var(--line); text-align: center; transition: border-color .12s; }
   .team.blue input { color: var(--blue); }
   .team.red  input { color: var(--red); }
   .team.blue.ok input { border-color: var(--blue-line); }
@@ -112,23 +129,26 @@
   .team .pop .opt { font-size: 15px; }
   .vs { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 22px; color: var(--muted); line-height: 1; flex: none; }
 
-  .cap { font-size: 10px; letter-spacing: .3em; color: var(--muted); margin-top: 62px; }
+  .cap { font-size: 10px; letter-spacing: .3em; color: var(--muted); margin-top: 40px; }
   .nums { display: flex; align-items: baseline; justify-content: center; gap: 26px; margin-top: 10px; }
-  .num { font-family: var(--serif); font-weight: 500; font-size: 132px; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; transition: color .2s; }
+  .num { font-family: var(--serif); font-weight: 500; font-size: 118px; line-height: 1; letter-spacing: -.02em; font-variant-numeric: lining-nums tabular-nums; transition: color .2s; }
   .num.blue { color: var(--blue); } .num.red { color: var(--red); }
   .nums.empty .num { color: var(--ghost); }
   .dash { width: 34px; height: 1px; background: #3a414c; }
-  .bar { display: flex; width: 100%; height: 8px; gap: 3px; margin-top: 30px; position: relative; }
+  .bar { display: flex; width: 100%; height: 8px; gap: 3px; margin-top: 24px; position: relative; }
   .bar::after { content: ""; position: absolute; left: 50%; top: -6px; bottom: -6px; width: 1px; background: var(--line-2); }
   .bar .b { width: 50%; background: var(--blue); transition: width .35s cubic-bezier(.2,.7,.2,1), background .2s; }
   .bar .r { flex: 1; background: var(--red); transition: background .2s; }
   .bar.empty .b, .bar.empty .r { background: #1a1f26; }
-  .detail { margin-top: 16px; font-size: 12px; letter-spacing: .04em; color: var(--muted); min-height: 18px; text-align: center; }
+  .detail { margin-top: 16px; font-size: 11.5px; letter-spacing: .02em; color: var(--muted); min-height: 18px; text-align: center; white-space: nowrap; }
   .detail b { font-weight: 500; color: var(--muted-2); }
+  .modes { display: flex; justify-content: center; gap: 22px; margin-top: 14px; }
+  .modes .toggle { font-size: 11px; letter-spacing: .08em; color: var(--muted); }
+  .modes .toggle.on { color: var(--muted-2); }
   .notes { margin-top: 10px; font-size: 12px; color: #8a7a55; line-height: 1.5; text-align: center; max-width: 520px; }
 
   /* footer */
-  .foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 14px; margin-top: 24px; font-size: 11px; letter-spacing: .08em; color: var(--muted); }
+  .foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 16px; font-size: 11px; letter-spacing: .08em; color: var(--muted); }
   .foot .left, .foot .right { display: flex; align-items: center; gap: 18px; }
   .foot button { font-size: 11px; letter-spacing: .08em; color: var(--muted-2); border-bottom: 1px solid transparent; padding-bottom: 1px; }
   .foot button:hover { color: var(--text); border-bottom-color: var(--line-2); }
@@ -156,6 +176,7 @@
 <body>
 <div class="app">
 
+  <div class="spacer" style="flex: 0.6 1 0"></div>
   <div class="mark">
     <div class="l1">
       <div class="word">PROJECT</div>
@@ -183,15 +204,17 @@
     <div class="sub">SENRIGAN</div>
   </div>
 
+  <div class="stage">
+  <div class="tick tr"></div><div class="tick bl"></div>
   <div class="grid">
     <!-- BLUE -->
     <div class="col blue" id="col-blue">
       <div class="head">BLUE</div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="jng"><div class="box"><div class="tag">JNG</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="mid"><div class="box"><div class="tag">MID</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="bot"><div class="box"><div class="tag">BOT</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="sup"><div class="box"><div class="tag">SUP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="top"><div class="box"><div class="tag">TOP</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="jng"><div class="box"><div class="tag">JNG</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="mid"><div class="box"><div class="tag">MID</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="bot"><div class="box"><div class="tag">BOT</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="sup"><div class="box"><div class="tag">SUP</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
       <div class="roster" id="roster-blue" title="click to change players"></div>
       <div class="players" id="players-blue">
         <div class="field" data-kind="player" data-side="blue" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
@@ -217,17 +240,18 @@
       </div>
       <div class="bar empty" id="bar"><div class="b" id="bar-b"></div><div class="r"></div></div>
       <div class="detail" id="detail"></div>
+      <div class="modes"><div class="toggle" id="draftonly" title="Score the draft by itself — champion meta only, no team ratings"><span>Draft only</span><div class="sw"></div></div></div>
       <div class="notes" id="notes"></div>
     </div>
 
     <!-- RED -->
     <div class="col red" id="col-red">
       <div class="head">RED</div>
-      <div class="field" data-kind="champion" data-side="red" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="red" data-role="jng"><div class="box"><div class="tag">JNG</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="red" data-role="mid"><div class="box"><div class="tag">MID</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="red" data-role="bot"><div class="box"><div class="tag">BOT</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="red" data-role="sup"><div class="box"><div class="tag">SUP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="top"><div class="box"><div class="tag">TOP</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="jng"><div class="box"><div class="tag">JNG</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="mid"><div class="box"><div class="tag">MID</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="bot"><div class="box"><div class="tag">BOT</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="sup"><div class="box"><div class="tag">SUP</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
       <div class="roster" id="roster-red" title="click to change players"></div>
       <div class="players" id="players-red">
         <div class="field" data-kind="player" data-side="red" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
@@ -238,6 +262,8 @@
       </div>
     </div>
   </div>
+  </div>
+  <div class="spacer"></div>
 
   <div class="foot">
     <div class="left">
@@ -275,7 +301,7 @@
     player: { blue: {}, red: {} },
     rosterDefault: { blue: [], red: [] },
     rosterEdited: { blue: false, red: false },
-    leagueManual: false, playoffs: false,
+    leagueManual: false, playoffs: false, draftOnly: false,
     meta: null, seq: 0,
   };
 
@@ -285,10 +311,15 @@
     let items = [], hi = 0, resolved = null, openTimer = null, lastQ = null;
 
     const render = () => {
+      const withIcon = kind === 'champion';
       pop.innerHTML = items.length
-        ? items.map((n, i) => `<div class="opt${i === hi ? ' hi' : ''}" data-i="${i}"><span>${esc(n)}</span><span class="key">ENTER</span></div>`).join('')
+        ? items.map((n, i) => `<div class="opt${i === hi ? ' hi' : ''}" data-i="${i}"><span class="lbl">${withIcon ? `<span class="ic">${iconImg(typeof icons[n] === 'string' ? icons[n] : null)}</span>` : ''}${esc(n)}</span><span class="key">ENTER</span></div>`).join('')
         : `<div class="none">no match</div>`;
       pop.classList.add('open');
+      if (withIcon && items.some(n => !(n in icons) || typeof icons[n] !== 'string' && icons[n] !== null)) {
+        const snapshot = items;
+        iconsFor(items).then(() => { if (pop.classList.contains('open') && items === snapshot) render(); });
+      }
     };
     const close = () => { pop.classList.remove('open'); pop.innerHTML = ''; };
     const setResolved = (name) => {
@@ -349,13 +380,30 @@
   }
   const esc = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+  // ---- champion portraits (CommunityDragon, cached by the app) ---------------
+  const icons = {};                                   // name -> data URL | null | Promise
+  async function iconsFor(names) {
+    const missing = names.filter(n => n && !(n in icons));
+    if (missing.length) {
+      const p = api.champion_icons(missing);
+      missing.forEach(n => icons[n] = p.then(r => icons[n] = r[n] || null));
+      await p;
+    }
+    return Object.fromEntries(names.map(n => [n, typeof icons[n] === 'string' ? icons[n] : null]));
+  }
+  const iconImg = (url) => url ? `<img src="${url}" alt="">` : '';
+
   // ---- wire up fields -------------------------------------------------------
   const combos = { team: {}, champ: { blue: {}, red: {} }, player: { blue: {}, red: {} } };
 
   for (const side of ['blue', 'red']) {
     combos.team[side] = combo($('#team-' + side), { kind: 'team', onChange: (n) => onTeam(side, n) });
     for (const f of $$(`#col-${side} .field[data-kind="champion"]`))
-      combos.champ[side][f.dataset.role] = combo(f, { kind: 'champion', onChange: (n) => { state.champ[side][f.dataset.role] = n; schedule(); } });
+      combos.champ[side][f.dataset.role] = combo(f, { kind: 'champion', onChange: async (n) => {
+        state.champ[side][f.dataset.role] = n; schedule();
+        const slot = $('.ic', f); slot.innerHTML = '';
+        if (n) { const m = await iconsFor([n]); if (state.champ[side][f.dataset.role] === n) slot.innerHTML = iconImg(m[n]); }
+      } });
     for (const f of $$(`#players-${side} .field`))
       combos.player[side][f.dataset.role] = combo(f, { kind: 'player', teamFor: () => state.team[side],
         onChange: (n) => { state.player[side][f.dataset.role] = n; state.rosterEdited[side] = true; renderRoster(side); schedule(); } });
@@ -364,9 +412,28 @@
   combos.league = combo($('#league'), { kind: 'league', onChange: () => schedule() });
   $('#league input').addEventListener('input', () => { state.leagueManual = true; });
   $('#playoffs').addEventListener('click', () => { state.playoffs = !state.playoffs; $('#playoffs').classList.toggle('on', state.playoffs); schedule(); });
+  $('#draftonly').addEventListener('click', () => { state.draftOnly = !state.draftOnly; $('#draftonly').classList.toggle('on', state.draftOnly); schedule(); });
+
+  // ---- team names: shrink the type until the name fits its field -------------
+  const measure = document.createElement('canvas').getContext('2d');
+  function fitTeam(root) {
+    const input = $('input', root), text = input.value || input.placeholder || '';
+    const max = 44, min = 22, avail = input.clientWidth - 8;
+    let size = max;
+    measure.font = `600 ${max}px "Cormorant Garamond", Georgia, serif`;
+    const w = measure.measureText(text).width;
+    if (w > avail) size = Math.max(min, Math.floor(max * avail / w));
+    input.style.fontSize = size + 'px';
+  }
+  for (const side of ['blue', 'red']) {
+    const root = $('#team-' + side);
+    $('input', root).addEventListener('input', () => fitTeam(root));
+    new ResizeObserver(() => fitTeam(root)).observe(root);
+  }
 
   async function onTeam(side, name) {
     state.team[side] = name;
+    fitTeam($('#team-' + side));
     state.rosterEdited[side] = false;
     state.player[side] = {};
     if (name) {
@@ -404,8 +471,10 @@
     const { blue, red } = state.team;
     if (!blue || !red || blue === red) { renderEmpty(blue && red && blue === red ? 'pick two different teams' : ''); return; }
     const rosterOf = (side) => state.rosterEdited[side] ? five(Object.fromEntries(ROLES.map(r => [r, combos.player[side][r].get()]))) : null;
+    const draftFull = !!(five(state.champ.blue) && five(state.champ.red));
+    if (state.draftOnly && !draftFull) { renderEmpty('draft-only read needs all ten champions'); return; }
     const payload = {
-      blue, red,
+      blue, red, variant: state.draftOnly ? 'draft_only' : 'auto',
       blue_champs: five(state.champ.blue), red_champs: five(state.champ.red),
       blue_roster: rosterOf('blue'), red_roster: rosterOf('red'),
       league: combos.league.get() || null, playoffs: state.playoffs,
@@ -423,14 +492,15 @@
     $('#nums').classList.remove('empty'); $('#bar').classList.remove('empty');
     countTo($('#num-blue'), pb); countTo($('#num-red'), pr);
     $('#bar-b').style.width = (res.p_blue_win * 100).toFixed(1) + '%';
-    $('#detail').innerHTML =
-      `fair odds <b>${res.fair_odds_blue.toFixed(2)}</b> · <b>${res.fair_odds_red.toFixed(2)}</b>` +
-      `&nbsp;&nbsp;&nbsp;Elo <b>${Math.round(res.blue_elo)}</b> – <b>${Math.round(res.red_elo)}</b>` +
-      `&nbsp;&nbsp;&nbsp;h2h <b>${res.h2h_blue_wins}</b>–<b>${res.h2h_red_wins}</b>` +
-      (res.blue_form != null && res.red_form != null ? `&nbsp;&nbsp;&nbsp;form <b>${Math.round(res.blue_form * 100)}%</b> / <b>${Math.round(res.red_form * 100)}%</b>` : '');
+    $('#detail').innerHTML = res.variant === 'draft_only'
+      ? `fair odds <b>${res.fair_odds_blue.toFixed(2)}</b> · <b>${res.fair_odds_red.toFixed(2)}</b>&nbsp;&nbsp;champion meta only — no team ratings`
+      : `fair odds <b>${res.fair_odds_blue.toFixed(2)}</b> · <b>${res.fair_odds_red.toFixed(2)}</b>` +
+        `&nbsp;&nbsp;Elo <b>${Math.round(res.blue_elo)}</b> – <b>${Math.round(res.red_elo)}</b>` +
+        `&nbsp;&nbsp;h2h <b>${res.h2h_blue_wins}</b>–<b>${res.h2h_red_wins}</b>` +
+        (res.blue_form != null && res.red_form != null ? `&nbsp;&nbsp;form <b>${Math.round(res.blue_form * 100)}%</b> / <b>${Math.round(res.red_form * 100)}%</b>` : '');
     const notes = (res.warnings || []).filter(w => !w.includes('roster assumed') && !w.includes('champion picks ignored'));
     $('#notes').textContent = notes.join('  ·  ');
-    $('#model').textContent = (res.variant === 'draft' ? 'Draft' : 'Pre-game') + ' model';
+    $('#model').textContent = ({ draft: 'Draft', draft_only: 'Draft-only', pregame: 'Pre-game' })[res.variant] + ' model';
     if (!combos.league.get() && res.league) combos.league.set(res.league);
   }
   function renderEmpty(msg) {
@@ -438,7 +508,7 @@
     $('#num-blue').textContent = '—'; $('#num-red').textContent = '—'; shown.b = null;
     $('#bar-b').style.width = '50%';
     $('#detail').textContent = ''; $('#notes').textContent = msg || '';
-    $('#model').textContent = (five(state.champ.blue) && five(state.champ.red) ? 'Draft' : 'Pre-game') + ' model';
+    $('#model').textContent = (state.draftOnly ? 'Draft-only' : (five(state.champ.blue) && five(state.champ.red) ? 'Draft' : 'Pre-game')) + ' model';
   }
   function countTo(el, target) {
     const from = parseInt(el.textContent, 10); if (isNaN(from)) { el.textContent = target; return; }
@@ -478,6 +548,7 @@
     if (booted) return; booted = true;
     state.meta = await api.meta();
     $('#through').textContent = 'Ratings through ' + fmtDate(state.meta.trained_through);
+    fitTeam($('#team-blue')); fitTeam($('#team-red'));
     $('#team-blue input').focus();
   }
   window.addEventListener('pywebviewready', boot);

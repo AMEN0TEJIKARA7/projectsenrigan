@@ -261,8 +261,10 @@ class Predictor:
 
         if variant == "auto":
             variant = "draft" if (blue_champs and red_champs) else "pregame"
-        if variant == "draft" and not (blue_champs and red_champs):
-            raise ValueError("draft variant needs both sides' champions")
+        if variant not in self.art["variants"]:
+            raise ValueError(f"this artifact has no {variant!r} model; retrain with train_final.py")
+        if variant in ("draft", "draft_only") and not (blue_champs and red_champs):
+            raise ValueError(f"{variant} variant needs both sides' champions")
         if variant == "pregame" and (blue_champs or red_champs):
             warnings.append("champion picks ignored: the pre-game model does not use them")
 

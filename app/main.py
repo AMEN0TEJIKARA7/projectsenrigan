@@ -51,6 +51,7 @@ sys.path.insert(0, str(bundle_root() / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from engine import Predictor, ResolveError  # noqa: E402
+from icons import IconStore  # noqa: E402
 from pipeline import Update  # noqa: E402
 
 UI_DIR = bundle_root() / "app" / "ui"
@@ -76,6 +77,8 @@ class Api:
         self.predictor = Predictor(ensure_artifact())
         self.update = Update(HOME)
         self.window = None
+        self.icons = IconStore(HOME)
+        self.icons.warm(self.predictor.lookups["champions"])
 
     # --- metadata / lookups -------------------------------------------------
 
@@ -95,6 +98,10 @@ class Api:
         if kind == "league":
             return p.search_leagues(query or "")
         return []
+
+    def champion_icons(self, names: list) -> dict:
+        """name -> data URL (or null) for each champion name given."""
+        return {n: self.icons.icon(n) for n in (names or []) if n}
 
     def team_info(self, team: str) -> dict:
         try:
@@ -118,6 +125,7 @@ class Api:
                     red_champs=_five_or_none(payload.get("red_champs")),
                     blue_roster=_five_or_none(payload.get("blue_roster")),
                     red_roster=_five_or_none(payload.get("red_roster")),
+                    variant=payload.get("variant") or "auto",
                     explain=True,
                 )
         except ResolveError as e:

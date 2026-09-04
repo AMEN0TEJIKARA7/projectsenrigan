@@ -56,7 +56,7 @@ def main() -> int:
     ap.add_argument("--blue-roster", default=None,
                     help="5 player names, role order (default: last-seen five)")
     ap.add_argument("--red-roster", default=None, help="same, red side")
-    ap.add_argument("--variant", choices=["auto", "pregame", "draft"], default="auto",
+    ap.add_argument("--variant", choices=["auto", "pregame", "draft", "draft_only"], default="auto",
                     help="which model to use (default: auto, by whether champs are given)")
     ap.add_argument("--model", type=Path, default=DEFAULT_ARTIFACT, help="artifact path")
     ap.add_argument("--explain", action="store_true", help="show per-feature contributions")

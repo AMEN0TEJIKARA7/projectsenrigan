@@ -13,9 +13,10 @@ describe. `--refit-full` refits the base model on 100% of history afterwards,
 which uses the most recent games but leaves the calibrator fitted against a
 slightly different model; it is off by default for that reason.
 
-Two variants are fitted:
-  pregame  — usable before champ select, i.e. against pre-match odds
-  draft    — pregame + champion features, usable once picks are locked
+Three variants are fitted:
+  pregame     — usable before champ select, i.e. against pre-match odds
+  draft       — pregame + champion features, usable once picks are locked
+  draft_only  — champion features alone, for reading a draft in isolation
 
 Usage:
     python3 train_final.py [--out PATH] [--refit-full] [--as-of YYYY-MM-DD]
@@ -51,6 +52,11 @@ DEFAULT_OUT = REPO_DIR / "models" / "lol_logistic_sigmoid_v1.joblib"
 FEATURE_SETS = {
     "pregame": PREGAME_FEATURES,
     "draft": PREGAME_FEATURES + DRAFT_FEATURES,
+    # Champion meta alone — no Elo, form, roster or head-to-head. Deliberately
+    # weak: it answers "what does the draft say by itself", which is a
+    # different question from "who wins", and its walk-forward numbers should
+    # be read that way.
+    "draft_only": DRAFT_FEATURES,
 }
 
 
