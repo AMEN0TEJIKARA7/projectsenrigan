@@ -5,16 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Project Senrigan</title>
 <style>
-  @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: normal; font-display: swap;
-    src: url(fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-  @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: normal; font-display: swap;
-    src: url(fonts/cormorant-garamond-latin-ext-500-normal.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
-  @font-face { font-family: "Cormorant Garamond"; font-weight: 600; font-style: normal; font-display: swap;
-    src: url(fonts/cormorant-garamond-latin-600-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-  @font-face { font-family: "Cormorant Garamond"; font-weight: 600; font-style: normal; font-display: swap;
-    src: url(fonts/cormorant-garamond-latin-ext-600-normal.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
-  @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: italic; font-display: swap;
-    src: url(fonts/cormorant-garamond-latin-500-italic.woff2) format("woff2"); }
+  @font-face { font-family: "Cinzel"; font-weight: 500; font-style: normal; font-display: swap;
+    src: url(fonts/cinzel-latin-500-normal.woff2) format("woff2"); }
+  @font-face { font-family: "Cinzel"; font-weight: 600; font-style: normal; font-display: swap;
+    src: url(fonts/cinzel-latin-600-normal.woff2) format("woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 300; font-style: normal; font-display: swap;
+    src: url(fonts/ibm-plex-sans-latin-300-normal.woff2) format("woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; font-style: normal; font-display: swap;
+    src: url(fonts/ibm-plex-sans-latin-600-normal.woff2) format("woff2"); }
   @font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-style: normal; font-display: swap;
     src: url(fonts/ibm-plex-sans-latin-400-normal.woff2) format("woff2"); }
   @font-face { font-family: "IBM Plex Sans"; font-weight: 500; font-style: normal; font-display: swap;
@@ -25,12 +23,12 @@
     --text: #e6e4df; --muted: #6b7380; --muted-2: #9aa1ab; --ghost: #3f4650;
     --blue: #5c7196; --red: #a35c58; --blue-line: #253147; --red-line: #3a2626;
     --pop: #151a21; --pop-hi: #1c222b;
-    --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --display: "Cinzel", "Times New Roman", serif;
     --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; }
-  body { margin: 0; background: #0b0e12; color: var(--text); font-family: var(--sans); font-size: 15px;
+  body { margin: 0; background: #12161c; color: var(--text); font-family: var(--sans); font-size: 15px;
          -webkit-font-smoothing: antialiased; overflow: hidden; user-select: none; }
   input { font: inherit; color: inherit; background: none; border: 0; outline: 0; padding: 0; margin: 0; width: 100%; user-select: text; }
   input::placeholder { color: var(--ghost); }
@@ -40,12 +38,12 @@
      a vignette to hold the edges, and a film grain so the dark reads as material, not a flat fill */
   body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background:
-      radial-gradient(55% 38% at 50% -4%, rgba(230,228,223,.07), rgba(230,228,223,0) 70%),
-      radial-gradient(48% 60% at -6% 104%, rgba(92,113,150,.26), rgba(92,113,150,0) 70%),
-      radial-gradient(48% 60% at 106% 104%, rgba(163,92,88,.24), rgba(163,92,88,0) 70%),
-      radial-gradient(110% 80% at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,.42) 100%),
-      #0b0e12; }
-  body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .055; mix-blend-mode: screen;
+      radial-gradient(50% 34% at 50% -6%, rgba(230,228,223,.045), rgba(230,228,223,0) 70%),
+      radial-gradient(42% 52% at -4% 102%, rgba(92,113,150,.30), rgba(92,113,150,0) 70%),
+      radial-gradient(42% 52% at 104% 102%, rgba(163,92,88,.28), rgba(163,92,88,0) 70%),
+      radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,.28) 100%),
+      #12161c; }
+  body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .03; mix-blend-mode: screen;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
   .app { height: 100%; display: flex; flex-direction: column; padding: 30px 40px 18px; max-width: 1140px; margin: 0 auto; position: relative; z-index: 1; }
 
@@ -57,14 +55,14 @@
   .foot { animation: rise .7s .24s cubic-bezier(.2,.7,.2,1) both; }
   .mark { gap: 8px; }
   .mark .l1 { display: flex; align-items: center; gap: 24px; }
-  .mark .word { font-family: var(--serif); font-weight: 600; font-size: 56px; letter-spacing: .3em; line-height: 1; }
-  .mark .sub  { font-family: var(--serif); font-weight: 500; font-size: 56px; letter-spacing: .3em; line-height: 1; color: var(--muted-2); padding-left: .3em; }
+  .mark .word { font-family: var(--display); font-weight: 600; font-size: 48px; letter-spacing: .28em; line-height: 1; }
+  .mark .sub  { font-family: var(--display); font-weight: 500; font-size: 48px; letter-spacing: .28em; line-height: 1; color: var(--muted-2); padding-left: .28em; }
   .mark .glyph { width: 64px; height: 64px; }
   .mark svg { display: block; }
 
   /* body grid */
   /* the stage: one ruled frame around everything you act on, so the atmosphere outside it stays outside */
-  .stage { position: relative; margin: 26px auto 0; width: 100%; max-width: 1060px; border: 1px solid var(--line-2); padding: 26px 34px 22px; background: rgba(12,15,19,.38); backdrop-filter: blur(2px); flex: 0 1 auto; }
+  .stage { position: relative; margin: 26px auto 0; width: 100%; max-width: 1060px; border: 1px solid var(--line-2); padding: 26px 34px 22px; background: rgba(10,13,17,.55); backdrop-filter: blur(2px); flex: 0 1 auto; }
   .stage::before, .stage::after { content: ""; position: absolute; width: 10px; height: 10px; border-color: var(--muted); border-style: solid; }
   .stage::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
   .stage::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
@@ -74,20 +72,29 @@
   .grid { display: grid; grid-template-columns: 236px minmax(0, 1fr) 236px; gap: 0; align-items: start; }
   .spacer { flex: 1 1 0; min-height: 10px; }
   .col { display: flex; flex-direction: column; gap: 4px; position: relative; }
-  .col .head { font-family: var(--serif); font-weight: 600; font-size: 22px; letter-spacing: .28em; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); margin-bottom: 6px; }
+  .col .head { font-family: var(--sans); font-weight: 600; font-size: 13px; letter-spacing: .34em; line-height: 22px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); margin-bottom: 6px; }
   .col.blue .head { color: var(--blue); }
   .col.red  .head { color: var(--red); text-align: right; }
+  .col.red .field .box { flex-direction: row-reverse; }
+  .col.blue .field input { text-align: right; }
+  .col.red .field input { text-align: left; }
+  .col.red .field .tag { text-align: right; }
+  .col.blue .pop .opt { flex-direction: row-reverse; }
+  .col.red .pop .opt { flex-direction: row; }
+  .col.red .pop .opt .lbl { flex-direction: row-reverse; }
+  .col.blue .pop .opt .lbl { flex-direction: row; }
+  .col.red .pop .opt .ic { margin-left: 0; margin-right: 10px; }
 
   /* combobox field */
   .field { position: relative; }
   .field .box { display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 2px; background: none; border: 0; border-bottom: 1px solid var(--line); transition: border-color .15s; }
-  .field input { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1; font-variant-numeric: lining-nums; }
-  .field input::placeholder { font-style: italic; font-weight: 500; color: var(--ghost); }
+  .field input { font-family: var(--sans); font-weight: 400; font-size: 16px; line-height: 1; flex: 1 1 auto; min-width: 0; }
+  .field input::placeholder { font-weight: 400; color: var(--ghost); }
   .field .tag { width: 30px; flex: none; font-size: 10px; letter-spacing: .18em; color: var(--muted); }
   .field .ic { width: 30px; height: 30px; flex: none; border: 1px solid var(--line-2); background: #0f1319; overflow: hidden; }
   .field .ic img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.85) brightness(.92); transform: scale(1.12); }
   .field .ic:empty { border-style: dashed; border-color: var(--line); }
-  .pop .opt .ic { width: 24px; height: 24px; flex: none; border: 1px solid var(--line-2); background: #0f1319; overflow: hidden; margin-right: 10px; }
+  .pop .opt .ic { width: 24px; height: 24px; flex: none; border: 1px solid var(--line-2); background: #0f1319; overflow: hidden; margin-left: 10px; }
   .pop .opt .ic img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.12); }
   .pop .opt .lbl { display: flex; align-items: center; }
   .field.focus .box { border-bottom-color: var(--muted-2); }
@@ -112,26 +119,26 @@
   .players.open { display: flex; }
   .players .box { height: 36px; }
   .players .tag { font-size: 9px; }
-  .players input { font-size: 17px; }
+  .players input { font-size: 14px; }
 
   /* centre */
   .centre { display: flex; flex-direction: column; align-items: center; padding: 14px 30px 6px; margin: 0 30px; min-width: 0; border-left: 1px solid var(--line); border-right: 1px solid var(--line); align-self: stretch; }
   .teams { display: flex; align-items: baseline; justify-content: center; gap: 22px; width: 100%; }
   .team { position: relative; flex: 1 1 0; min-width: 0; max-width: 300px; }
-  .team input { font-family: var(--serif); font-weight: 600; font-size: 44px; line-height: 1; font-variant-numeric: lining-nums; height: 52px; padding-bottom: 6px; border-bottom: 1px solid var(--line); text-align: center; transition: border-color .12s; }
+  .team input { font-family: var(--sans); font-weight: 600; font-size: 36px; line-height: 1; letter-spacing: -.01em; height: 46px; padding-bottom: 6px; border-bottom: 1px solid var(--line); text-align: center; transition: border-color .12s; }
   .team.blue input { color: var(--blue); }
   .team.red  input { color: var(--red); }
   .team.blue.ok input { border-color: var(--blue-line); }
   .team.red.ok  input { border-color: var(--red-line); }
   .team.focus input { border-color: var(--muted); }
   .team.bad input { border-color: #5a2f2f; color: #c98a86; }
-  .team input::placeholder { color: var(--ghost); font-weight: 500; }
+  .team input::placeholder { color: var(--ghost); font-weight: 400; }
   .team .pop .opt { font-size: 15px; }
-  .vs { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 22px; color: var(--muted); line-height: 1; flex: none; }
+  .vs { font-family: var(--sans); font-weight: 500; font-size: 11px; letter-spacing: .3em; color: var(--muted); line-height: 1; flex: none; padding-bottom: 8px; }
 
   .cap { font-size: 10px; letter-spacing: .3em; color: var(--muted); margin-top: 40px; }
   .nums { display: flex; align-items: baseline; justify-content: center; gap: 26px; margin-top: 10px; }
-  .num { font-family: var(--serif); font-weight: 500; font-size: 118px; line-height: 1; letter-spacing: -.02em; font-variant-numeric: lining-nums tabular-nums; transition: color .2s; }
+  .num { font-family: var(--sans); font-weight: 300; font-size: 108px; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; transition: color .2s; }
   .num.blue { color: var(--blue); } .num.red { color: var(--red); }
   .nums.empty .num { color: var(--ghost); }
   .dash { width: 34px; height: 1px; background: #3a414c; }
@@ -142,9 +149,15 @@
   .bar.empty .b, .bar.empty .r { background: #1a1f26; }
   .detail { margin-top: 16px; font-size: 11.5px; letter-spacing: .02em; color: var(--muted); min-height: 18px; text-align: center; white-space: nowrap; }
   .detail b { font-weight: 500; color: var(--muted-2); }
-  .modes { display: flex; justify-content: center; gap: 22px; margin-top: 14px; }
-  .modes .toggle { font-size: 11px; letter-spacing: .08em; color: var(--muted); }
-  .modes .toggle.on { color: var(--muted-2); }
+  .modes { width: 100%; margin-top: 18px; }
+  .slab { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 40px; padding: 0 16px; border: 1px solid var(--line-2); cursor: pointer; font-size: 11px; font-weight: 500; letter-spacing: .26em; color: var(--muted-2); text-transform: uppercase; transition: background .15s, color .15s, border-color .15s; user-select: none; }
+  .slab:hover { border-color: var(--muted); color: var(--text); }
+  .slab .hint { letter-spacing: .04em; text-transform: none; font-weight: 400; color: var(--muted); }
+  .slab.on { background: var(--text); color: #0c0f13; border-color: var(--text); }
+  .slab.on .hint { color: #3a3f47; }
+  .slab .sw { width: 30px; height: 14px; border: 1px solid currentColor; position: relative; flex: none; }
+  .slab .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 8px; height: 8px; background: currentColor; opacity: .5; transition: left .15s, opacity .15s; }
+  .slab.on .sw::after { left: 18px; opacity: 1; }
   .notes { margin-top: 10px; font-size: 12px; color: #8a7a55; line-height: 1.5; text-align: center; max-width: 520px; }
 
   /* footer */
@@ -210,11 +223,11 @@
     <!-- BLUE -->
     <div class="col blue" id="col-blue">
       <div class="head">BLUE</div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="top"><div class="box"><div class="tag">TOP</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="jng"><div class="box"><div class="tag">JNG</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="mid"><div class="box"><div class="tag">MID</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="bot"><div class="box"><div class="tag">BOT</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="blue" data-role="sup"><div class="box"><div class="tag">SUP</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="jng"><div class="box"><div class="tag">JNG</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="mid"><div class="box"><div class="tag">MID</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="bot"><div class="box"><div class="tag">BOT</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="blue" data-role="sup"><div class="box"><div class="tag">SUP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
       <div class="roster" id="roster-blue" title="click to change players"></div>
       <div class="players" id="players-blue">
         <div class="field" data-kind="player" data-side="blue" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
@@ -229,7 +242,7 @@
     <div class="centre">
       <div class="teams">
         <div class="team blue" id="team-blue" data-kind="team" data-side="blue"><input placeholder="blue team" spellcheck="false" autocomplete="off"><div class="pop"></div></div>
-        <div class="vs">vs</div>
+        <div class="vs">VS</div>
         <div class="team red" id="team-red" data-kind="team" data-side="red"><input placeholder="red team" spellcheck="false" autocomplete="off"><div class="pop"></div></div>
       </div>
       <div class="cap">WIN PROBABILITY</div>
@@ -240,18 +253,18 @@
       </div>
       <div class="bar empty" id="bar"><div class="b" id="bar-b"></div><div class="r"></div></div>
       <div class="detail" id="detail"></div>
-      <div class="modes"><div class="toggle" id="draftonly" title="Score the draft by itself — champion meta only, no team ratings"><span>Draft only</span><div class="sw"></div></div></div>
+      <div class="modes"><div class="slab" id="draftonly" title="Score the draft by itself — champion meta only, no team ratings"><span>Draft only</span><span class="hint">champion meta, no team ratings</span><div class="sw"></div></div></div>
       <div class="notes" id="notes"></div>
     </div>
 
     <!-- RED -->
     <div class="col red" id="col-red">
       <div class="head">RED</div>
-      <div class="field" data-kind="champion" data-side="red" data-role="top"><div class="box"><div class="tag">TOP</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="red" data-role="jng"><div class="box"><div class="tag">JNG</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="red" data-role="mid"><div class="box"><div class="tag">MID</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="red" data-role="bot"><div class="box"><div class="tag">BOT</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
-      <div class="field" data-kind="champion" data-side="red" data-role="sup"><div class="box"><div class="tag">SUP</div><div class="ic"></div><input placeholder="type a champion" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="jng"><div class="box"><div class="tag">JNG</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="mid"><div class="box"><div class="tag">MID</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="bot"><div class="box"><div class="tag">BOT</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
+      <div class="field" data-kind="champion" data-side="red" data-role="sup"><div class="box"><div class="tag">SUP</div><input placeholder="type a champion" spellcheck="false" autocomplete="off"><div class="ic"></div></div><div class="pop"></div></div>
       <div class="roster" id="roster-red" title="click to change players"></div>
       <div class="players" id="players-red">
         <div class="field" data-kind="player" data-side="red" data-role="top"><div class="box"><div class="tag">TOP</div><input placeholder="player" spellcheck="false" autocomplete="off"></div><div class="pop"></div></div>
@@ -271,6 +284,7 @@
       <button id="btn-update" title="Download the latest data from the repository and retrain">Update</button>
       <button id="btn-import" title="Retrain from Oracle's Elixir CSV files on this computer">Import CSV…</button>
       <span class="progress" id="progress"></span>
+      <span class="progress err" id="iconstat"></span>
     </div>
     <div class="right">
       <div class="toggle" id="playoffs"><span>Playoffs</span><div class="sw"></div></div>
@@ -313,7 +327,7 @@
     const render = () => {
       const withIcon = kind === 'champion';
       pop.innerHTML = items.length
-        ? items.map((n, i) => `<div class="opt${i === hi ? ' hi' : ''}" data-i="${i}"><span class="lbl">${withIcon ? `<span class="ic">${iconImg(typeof icons[n] === 'string' ? icons[n] : null)}</span>` : ''}${esc(n)}</span><span class="key">ENTER</span></div>`).join('')
+        ? items.map((n, i) => `<div class="opt${i === hi ? ' hi' : ''}" data-i="${i}"><span class="lbl">${esc(n)}${withIcon ? `<span class="ic">${iconImg(typeof icons[n] === 'string' ? icons[n] : null)}</span>` : ''}</span><span class="key">ENTER</span></div>`).join('')
         : `<div class="none">no match</div>`;
       pop.classList.add('open');
       if (withIcon && items.some(n => !(n in icons) || typeof icons[n] !== 'string' && icons[n] !== null)) {
@@ -418,9 +432,9 @@
   const measure = document.createElement('canvas').getContext('2d');
   function fitTeam(root) {
     const input = $('input', root), text = input.value || input.placeholder || '';
-    const max = 44, min = 22, avail = input.clientWidth - 8;
+    const max = 36, min = 18, avail = input.clientWidth - 8;
     let size = max;
-    measure.font = `600 ${max}px "Cormorant Garamond", Georgia, serif`;
+    measure.font = `600 ${max}px "IBM Plex Sans", "Segoe UI", sans-serif`;
     const w = measure.measureText(text).width;
     if (w > avail) size = Math.max(min, Math.floor(max * avail / w));
     input.style.fontSize = size + 'px';
@@ -550,6 +564,14 @@
     $('#through').textContent = 'Ratings through ' + fmtDate(state.meta.trained_through);
     fitTeam($('#team-blue')); fitTeam($('#team-red'));
     $('#team-blue input').focus();
+    // Portraits load in the background; say so if they can't, rather than showing blanks silently.
+    const checkIcons = async (tries) => {
+      const st = await api.icons_status();
+      if (!st.ready && tries > 0) return setTimeout(() => checkIcons(tries - 1), 1500);
+      $('#iconstat').textContent = st.error ? 'portraits unavailable — ' + st.error.split(';')[0].slice(0, 90) : '';
+      $('#iconstat').title = st.error || '';
+    };
+    setTimeout(() => checkIcons(10), 800);
   }
   window.addEventListener('pywebviewready', boot);
   setTimeout(() => { if (!booted) boot(); }, 400);

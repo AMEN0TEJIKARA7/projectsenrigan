@@ -103,6 +103,9 @@ class Api:
         """name -> data URL (or null) for each champion name given."""
         return {n: self.icons.icon(n) for n in (names or []) if n}
 
+    def icons_status(self) -> dict:
+        return self.icons.status()
+
     def team_info(self, team: str) -> dict:
         try:
             return self.predictor.team_info(team)
