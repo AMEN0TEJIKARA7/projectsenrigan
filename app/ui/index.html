@@ -30,43 +30,55 @@
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px;
+  body { margin: 0; background: #0b0e12; color: var(--text); font-family: var(--sans); font-size: 15px;
          -webkit-font-smoothing: antialiased; overflow: hidden; user-select: none; }
   input { font: inherit; color: inherit; background: none; border: 0; outline: 0; padding: 0; margin: 0; width: 100%; user-select: text; }
   input::placeholder { color: var(--ghost); }
   button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
   ::selection { background: #2a2f38; }
-  /* side atmosphere: blue breathes in from the left, red from the right */
+  /* atmosphere: a soft glow behind the wordmark, blue and red pooling in the lower corners,
+     a vignette to hold the edges, and a film grain so the dark reads as material, not a flat fill */
   body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background: linear-gradient(90deg, rgba(92,113,150,.16) 0%, rgba(92,113,150,.05) 14%, rgba(92,113,150,0) 30%,
-                                        rgba(163,92,88,0) 70%, rgba(163,92,88,.05) 86%, rgba(163,92,88,.16) 100%); }
-
+    background:
+      radial-gradient(55% 38% at 50% -4%, rgba(230,228,223,.07), rgba(230,228,223,0) 70%),
+      radial-gradient(48% 60% at -6% 104%, rgba(92,113,150,.26), rgba(92,113,150,0) 70%),
+      radial-gradient(48% 60% at 106% 104%, rgba(163,92,88,.24), rgba(163,92,88,0) 70%),
+      radial-gradient(110% 80% at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,.42) 100%),
+      #0b0e12; }
+  body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .055; mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
   .app { height: 100%; display: flex; flex-direction: column; padding: 40px 48px 24px; max-width: 1180px; margin: 0 auto; position: relative; z-index: 1; }
 
   /* wordmark */
   .mark { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .mark { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+  .grid { animation: rise .7s .12s cubic-bezier(.2,.7,.2,1) both; }
+  .foot { animation: rise .7s .24s cubic-bezier(.2,.7,.2,1) both; }
   .mark .l1 { display: flex; align-items: center; gap: 28px; }
   .mark .word { font-family: var(--serif); font-weight: 600; font-size: 66px; letter-spacing: .3em; line-height: 1; }
   .mark .sub  { font-family: var(--serif); font-weight: 500; font-size: 66px; letter-spacing: .3em; line-height: 1; color: var(--muted-2); padding-left: .3em; }
   .mark svg { display: block; }
 
   /* body grid */
-  .grid { display: grid; grid-template-columns: 250px minmax(0, 1fr) 250px; gap: 56px; align-items: start; margin-top: 64px; flex: 1; min-height: 0; }
-  .col { display: flex; flex-direction: column; gap: 10px; position: relative; }
-  .col .head { font-family: var(--serif); font-weight: 600; font-size: 22px; letter-spacing: .28em; padding-bottom: 6px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+  .grid { display: grid; grid-template-columns: 250px minmax(0, 1fr) 250px; gap: 0; align-items: start; align-content: center; margin-top: 28px; flex: 1; min-height: 0; }
+  .col { display: flex; flex-direction: column; gap: 6px; position: relative; }
+  .col .head { font-family: var(--serif); font-weight: 600; font-size: 22px; letter-spacing: .28em; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); margin-bottom: 6px; }
   .col.blue .head { color: var(--blue); }
   .col.red  .head { color: var(--red); text-align: right; }
 
   /* combobox field */
   .field { position: relative; }
-  .field .box { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 14px; background: var(--panel); border: 1px solid var(--line); transition: border-color .12s; }
-  .field .tag { width: 28px; flex: none; font-size: 11px; letter-spacing: .14em; color: var(--muted); }
-  .field.focus .box { border-color: var(--muted); }
-  .col.blue .field.focus .box { border-color: var(--blue); }
-  .col.red  .field.focus .box { border-color: var(--red); }
-  .field.bad .box { border-color: #5a2f2f; }
+  .field .box { display: flex; align-items: baseline; gap: 14px; height: 46px; padding: 0 2px; background: none; border: 0; border-bottom: 1px solid var(--line); transition: border-color .15s; }
+  .field input { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1; font-variant-numeric: lining-nums; }
+  .field input::placeholder { font-style: italic; font-weight: 500; color: var(--ghost); }
+  .field .tag { width: 30px; flex: none; font-size: 10px; letter-spacing: .18em; color: var(--muted); transform: translateY(-3px); }
+  .field.focus .box { border-bottom-color: var(--muted-2); }
+  .col.blue .field.focus .box { border-bottom-color: var(--blue); }
+  .col.red  .field.focus .box { border-bottom-color: var(--red); }
+  .field.bad .box { border-bottom-color: #5a2f2f; }
   .field.bad input { color: #c98a86; }
-  .pop { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--pop); border: 1px solid var(--line-2); z-index: 20; box-shadow: 0 14px 30px rgba(0,0,0,.45); display: none; }
+  .pop { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(21,26,33,.92); backdrop-filter: blur(10px); border: 1px solid var(--line-2); z-index: 20; box-shadow: 0 18px 40px rgba(0,0,0,.55); display: none; }
   .pop.open { display: block; }
   .pop .opt { display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 14px; font-size: 14px; color: #a9b0ba; cursor: pointer; }
   .pop .opt.hi { background: var(--pop-hi); color: #fff; }
@@ -82,11 +94,11 @@
   .players { display: none; flex-direction: column; gap: 6px; margin-top: 4px; }
   .players.open { display: flex; }
   .players .box { height: 36px; }
-  .players .tag { font-size: 10px; }
-  .players input { font-size: 14px; }
+  .players .tag { font-size: 9px; }
+  .players input { font-size: 17px; }
 
   /* centre */
-  .centre { display: flex; flex-direction: column; align-items: center; padding-top: 26px; min-width: 0; }
+  .centre { display: flex; flex-direction: column; align-items: center; padding: 26px 44px 22px; margin: 0 40px; min-width: 0; border-left: 1px solid var(--line); border-right: 1px solid var(--line); align-self: stretch; }
   .teams { display: flex; align-items: baseline; justify-content: center; gap: 22px; width: 100%; }
   .team { position: relative; flex: 1 1 0; min-width: 0; max-width: 260px; }
   .team input { font-family: var(--serif); font-weight: 600; font-size: 44px; line-height: 1; font-variant-numeric: lining-nums; padding-bottom: 6px; border-bottom: 1px solid var(--line); text-align: center; transition: border-color .12s; }
@@ -106,7 +118,8 @@
   .num.blue { color: var(--blue); } .num.red { color: var(--red); }
   .nums.empty .num { color: var(--ghost); }
   .dash { width: 34px; height: 1px; background: #3a414c; }
-  .bar { display: flex; width: 100%; height: 10px; gap: 3px; margin-top: 32px; }
+  .bar { display: flex; width: 100%; height: 8px; gap: 3px; margin-top: 30px; position: relative; }
+  .bar::after { content: ""; position: absolute; left: 50%; top: -6px; bottom: -6px; width: 1px; background: var(--line-2); }
   .bar .b { width: 50%; background: var(--blue); transition: width .35s cubic-bezier(.2,.7,.2,1), background .2s; }
   .bar .r { flex: 1; background: var(--red); transition: background .2s; }
   .bar.empty .b, .bar.empty .r { background: #1a1f26; }
@@ -115,7 +128,7 @@
   .notes { margin-top: 10px; font-size: 12px; color: #8a7a55; line-height: 1.5; text-align: center; max-width: 520px; }
 
   /* footer */
-  .foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 18px; font-size: 11px; letter-spacing: .08em; color: var(--muted); }
+  .foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 14px; margin-top: 24px; font-size: 11px; letter-spacing: .08em; color: var(--muted); }
   .foot .left, .foot .right { display: flex; align-items: center; gap: 18px; }
   .foot button { font-size: 11px; letter-spacing: .08em; color: var(--muted-2); border-bottom: 1px solid transparent; padding-bottom: 1px; }
   .foot button:hover { color: var(--text); border-bottom-color: var(--line-2); }
@@ -157,7 +170,7 @@
           <clipPath id="sg-disc"><circle cx="40" cy="40" r="35.5"/></clipPath>
         </defs>
         <circle cx="40" cy="40" r="37.5" fill="none" stroke="#e6e4df" stroke-width="1.6"/>
-        <g clip-path="url(#sg-disc)">
+        <g clip-path="url(#sg-disc)" transform="translate(80,0) scale(-1,1)">
           <g stroke="#e6e4df" stroke-opacity=".14" stroke-width="1">
             <line x1="68.0" y1="40.0" x2="0.0" y2="40.0"/><line x1="67.5" y1="45.9" x2="0.5" y2="34.1"/><line x1="65.9" y1="51.6" x2="2.1" y2="28.4"/><line x1="63.4" y1="57.0" x2="4.6" y2="23.0"/><line x1="60.0" y1="61.9" x2="8.0" y2="18.1"/><line x1="55.9" y1="66.0" x2="12.1" y2="14.0"/><line x1="51.0" y1="69.4" x2="17.0" y2="10.6"/><line x1="45.6" y1="71.9" x2="22.4" y2="8.1"/><line x1="39.9" y1="73.5" x2="28.1" y2="6.5"/><line x1="34.0" y1="74.0" x2="34.0" y2="6.0"/><line x1="28.1" y1="73.5" x2="39.9" y2="6.5"/><line x1="22.4" y1="71.9" x2="45.6" y2="8.1"/><line x1="17.0" y1="69.4" x2="51.0" y2="10.6"/><line x1="12.1" y1="66.0" x2="55.9" y2="14.0"/><line x1="8.0" y1="61.9" x2="60.0" y2="18.1"/><line x1="4.6" y1="57.0" x2="63.4" y2="23.0"/><line x1="2.1" y1="51.6" x2="65.9" y2="28.4"/><line x1="0.5" y1="45.9" x2="67.5" y2="34.1"/>
           </g>
