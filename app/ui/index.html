@@ -36,18 +36,22 @@
   input::placeholder { color: var(--ghost); }
   button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
   ::selection { background: #2a2f38; }
+  /* side atmosphere: blue breathes in from the left, red from the right */
+  body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: linear-gradient(90deg, rgba(92,113,150,.16) 0%, rgba(92,113,150,.05) 14%, rgba(92,113,150,0) 30%,
+                                        rgba(163,92,88,0) 70%, rgba(163,92,88,.05) 86%, rgba(163,92,88,.16) 100%); }
 
-  .app { height: 100%; display: flex; flex-direction: column; padding: 36px 48px 24px; max-width: 1180px; margin: 0 auto; }
+  .app { height: 100%; display: flex; flex-direction: column; padding: 40px 48px 24px; max-width: 1180px; margin: 0 auto; position: relative; z-index: 1; }
 
   /* wordmark */
-  .mark { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .mark .l1 { display: flex; align-items: center; gap: 14px; }
-  .mark .word { font-family: var(--serif); font-weight: 600; font-size: 26px; letter-spacing: .34em; line-height: 1; }
-  .mark .sub  { font-family: var(--serif); font-weight: 500; font-size: 26px; letter-spacing: .34em; line-height: 1; color: var(--muted-2); padding-left: .34em; }
+  .mark { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .mark .l1 { display: flex; align-items: center; gap: 28px; }
+  .mark .word { font-family: var(--serif); font-weight: 600; font-size: 66px; letter-spacing: .3em; line-height: 1; }
+  .mark .sub  { font-family: var(--serif); font-weight: 500; font-size: 66px; letter-spacing: .3em; line-height: 1; color: var(--muted-2); padding-left: .3em; }
   .mark svg { display: block; }
 
   /* body grid */
-  .grid { display: grid; grid-template-columns: 250px minmax(0, 1fr) 250px; gap: 56px; align-items: start; margin-top: 54px; flex: 1; min-height: 0; }
+  .grid { display: grid; grid-template-columns: 250px minmax(0, 1fr) 250px; gap: 56px; align-items: start; margin-top: 64px; flex: 1; min-height: 0; }
   .col { display: flex; flex-direction: column; gap: 10px; position: relative; }
   .col .head { font-family: var(--serif); font-weight: 600; font-size: 22px; letter-spacing: .28em; padding-bottom: 6px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
   .col.blue .head { color: var(--blue); }
@@ -133,7 +137,7 @@
   .log { position: fixed; left: 48px; bottom: 54px; width: 460px; max-height: 220px; overflow: hidden; background: var(--pop); border: 1px solid var(--line-2); padding: 12px 14px; font-size: 11px; color: var(--muted-2); line-height: 1.55; display: none; z-index: 30; white-space: pre-wrap; }
   .log.open { display: block; }
 
-  @media (max-width: 1060px) { .grid { grid-template-columns: 220px minmax(0,1fr) 220px; gap: 36px; } .num { font-size: 108px; } .team input { font-size: 38px; } }
+  @media (max-width: 1060px) { .grid { grid-template-columns: 220px minmax(0,1fr) 220px; gap: 36px; } .num { font-size: 108px; } .team input { font-size: 38px; } .mark .word, .mark .sub { font-size: 52px; } .mark .glyph { width: 60px; height: 60px; } }
 </style>
 </head>
 <body>
@@ -142,10 +146,25 @@
   <div class="mark">
     <div class="l1">
       <div class="word">PROJECT</div>
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#e6e4df" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M2 15 C7 7.5 23 7.5 28 15 C23 22.5 7 22.5 2 15 Z"></path>
-        <circle cx="15" cy="15" r="6.2"></circle>
-        <circle cx="15" cy="15" r="2.6" fill="#e6e4df" stroke="none"></circle>
+      <svg xmlns="http://www.w3.org/2000/svg" class="glyph" width="76" height="76" viewBox="0 0 80 80" aria-hidden="true">
+        <defs>
+          <radialGradient id="sg-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="22%" stop-color="#e6e4df"/>
+            <stop offset="55%" stop-color="#9aa1ab" stop-opacity=".6"/>
+            <stop offset="100%" stop-color="#0c0f13" stop-opacity="0"/>
+          </radialGradient>
+          <clipPath id="sg-disc"><circle cx="40" cy="40" r="35.5"/></clipPath>
+        </defs>
+        <circle cx="40" cy="40" r="37.5" fill="none" stroke="#e6e4df" stroke-width="1.6"/>
+        <g clip-path="url(#sg-disc)">
+          <g stroke="#e6e4df" stroke-opacity=".14" stroke-width="1">
+            <line x1="68.0" y1="40.0" x2="0.0" y2="40.0"/><line x1="67.5" y1="45.9" x2="0.5" y2="34.1"/><line x1="65.9" y1="51.6" x2="2.1" y2="28.4"/><line x1="63.4" y1="57.0" x2="4.6" y2="23.0"/><line x1="60.0" y1="61.9" x2="8.0" y2="18.1"/><line x1="55.9" y1="66.0" x2="12.1" y2="14.0"/><line x1="51.0" y1="69.4" x2="17.0" y2="10.6"/><line x1="45.6" y1="71.9" x2="22.4" y2="8.1"/><line x1="39.9" y1="73.5" x2="28.1" y2="6.5"/><line x1="34.0" y1="74.0" x2="34.0" y2="6.0"/><line x1="28.1" y1="73.5" x2="39.9" y2="6.5"/><line x1="22.4" y1="71.9" x2="45.6" y2="8.1"/><line x1="17.0" y1="69.4" x2="51.0" y2="10.6"/><line x1="12.1" y1="66.0" x2="55.9" y2="14.0"/><line x1="8.0" y1="61.9" x2="60.0" y2="18.1"/><line x1="4.6" y1="57.0" x2="63.4" y2="23.0"/><line x1="2.1" y1="51.6" x2="65.9" y2="28.4"/><line x1="0.5" y1="45.9" x2="67.5" y2="34.1"/>
+          </g>
+          <circle cx="34" cy="40" r="31" fill="url(#sg-core)"/>
+          <circle cx="57" cy="40" r="27.5" fill="#0c0f13"/>
+          <circle cx="57" cy="40" r="27.5" fill="none" stroke="#e6e4df" stroke-opacity=".85" stroke-width="1.2"/>
+        </g>
       </svg>
     </div>
     <div class="sub">SENRIGAN</div>
